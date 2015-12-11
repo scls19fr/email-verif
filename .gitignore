@@ -55,3 +55,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+config.py
+cache.sqlite
+email_valid_results.xls
