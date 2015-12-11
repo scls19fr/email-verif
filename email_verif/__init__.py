@@ -10,14 +10,14 @@ class EmailVerif(object):
     def __init__(self):
         pass
 
-    def verify(self, emails):
+    def verify(self, emails, return_failed=False):
         """
         Verify one or several emails
         """
         if isinstance(emails, six.string_types):
             results = self._verify_email_one(emails)
         else:
-            results = self._verify_email_multi(emails)
+            results = self._verify_email_multi(emails, return_failed=return_failed)
         return results
 
     def _verify_email_one(self, email):
