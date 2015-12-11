@@ -87,7 +87,7 @@ setup(
     # project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
-    install_requires=['session', 'six'],
+    install_requires=['requests', 'six'],
 
     # List additional groups of dependencies here (e.g. development dependencies).
     # You can install these using the following syntax, for example:
@@ -95,6 +95,7 @@ setup(
     extras_require = {
         'dev': ['check-manifest', 'nose'],
         'test': ['coverage', 'nose'],
+        'cache': ['requests-cache']
     },
 
     # If there are data files included in your packages that need to be

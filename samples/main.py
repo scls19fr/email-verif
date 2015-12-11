@@ -6,8 +6,10 @@ from __future__ import absolute_import, division, print_function
 from email_verif import EmailVerifVerifyEmail
 from config import credentials
 
-import requests_cache
 import datetime
+import requests_cache
+# requests_cache is an optional requirements but highly recommanded
+# to avoid too much API requests
 
 import pprint
 
