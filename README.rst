@@ -23,6 +23,27 @@ Development
 
 You can help to develop this library.
 
+
+
+Requirements
+^^^^^^^^^^^^
+
+- python-requests http://docs.python-requests.org/
+
+  Requests is an Apache2 Licensed HTTP library, written in Python, for human beings.
+
+- six https://pythonhosted.org/six/
+
+  Six is a Python 2 and 3 Compatibility Library
+
+Optional dependencies
+^^^^^^^^^^^^^^^^^^^^^
+
+- https://github.com/reclosedev/requests-cache
+
+  requests-cache is a transparent persistent cache for http://python-requests.org/ library
+
+
 Issues
 ^^^^^^
 
