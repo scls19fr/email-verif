@@ -9,5 +9,8 @@ credentials = {
     'emailhippo.com': {
         'api_url': 'https://domain.com/api/v2',
         'api_key': 'YOURAPIKEY',
-    }
+    },
+    'email-validator.net': {
+        'api_key': '',
+    },
 }
