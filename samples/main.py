@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from email_verif import EmailVerifVerifyEmail
+from email_verif import EmailVerif
 from config import credentials
 
 import datetime
@@ -12,8 +12,17 @@ import requests_cache
 # to avoid too much API requests
 
 import pprint
+import logging
+
+try:
+    import pandas as pd
+    _HAS_PANDAS = True
+except ImportError:
+    _HAS_PANDAS = False
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
+
     pp = pprint.PrettyPrinter(indent=4)
 
     print("Create a CachedSession")
@@ -22,24 +31,32 @@ def main():
         expire_after=datetime.timedelta(days=365))
 
     print("Instantiate an email verificator")
-    verificator = EmailVerifVerifyEmail(session=session)
+    #provider = 'verify-email.org'
+    provider = 'emailhippo.com'
+    verificator = EmailVerif.select(provider=provider)(session=session)
 
     print("Set credentials")
-    verificator.set_credentials(
-        username=credentials['username'], 
-        password=credentials['password']
-    )
+    #verificator.set_credentials(
+    #    username=credentials[provider]['username'], 
+    #    password=credentials[provider]['password']
+    #)
+    verificator.set_credentials(**credentials[provider])
 
     #print("Verify one email")
-    #results = verificator.verify('foo.bar@domain.com')
+    #email = 'foo.bar@domain.com'
+    #results = verificator.verify(email)
     #print(results)
 
     print("Verify several emails")
-    results = verificator.verify(['foo.bar.1@python.org',
-                'foo.bar.2@python.org',  'foo.bar.3@python.org', 'email@example.com'])
+    lst_emails = ['foo.bar.1@python.org',
+                'foo.bar.2@python.org',  'foo.bar.3@python.org', 'email@example.com']
+    results = verificator.verify(lst_emails)
     pp.pprint(results)
 
-    import pandas as pd
+    if _HAS_PANDAS:
+        results_to_dataframe(results)
+
+def results_to_dataframe(results):
     df_results = pd.DataFrame(results).transpose()
     print(df_results)
     df_results.to_excel("email_valid_results.xls")

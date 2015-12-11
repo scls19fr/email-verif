@@ -2,6 +2,12 @@
 # -*- coding: utf-8 -*-
 
 credentials = {
-    'username': 'YOURUSERNAME',
-    'password': 'YOURPASSWORD',
+    'verify-email.org': {
+        'username': 'YOURUSERNAME',
+        'password': 'YOURPASSWORD',
+    }
+    'emailhippo.com': {
+        'api_url': 'https://domain.com/api/v2',
+        'api_key': 'YOURAPIKEY',
+    }
 }
