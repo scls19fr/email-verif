@@ -25,6 +25,7 @@ class EmailVerif(object):
         d = OrderedDict([
             ('verify-email.org', EmailVerifProviderVerifyEmailDotOrg),
             ('emailhippo.com', EmailVerifProviderEmailHippoDotCom),
+            ('email-validator.net', EmailVerifProviderEmailValidatorDotNet),
         ])
         try:
             verif_cls = d[provider]
@@ -32,14 +33,17 @@ class EmailVerif(object):
         except KeyError:
             raise NotImplementedError("%s not in %s" % (cls, d.keys()))
 
-    def verify(self, emails, return_failed=False):
+    def verify(self, emails, return_failed=False, bulk=False):
         """
         Verify one or several emails
         """
         if isinstance(emails, six.string_types):
             results = self._verify_email_one(emails)
         else:
-            results = self._verify_email_multi(emails, return_failed=return_failed)
+            if not bulk:
+                results = self._verify_email_multi(emails, return_failed=return_failed)
+            else:
+                results = self._verify_email_multi_bulk(emails)
         return results
 
     @abstractmethod
@@ -70,14 +74,19 @@ class EmailVerifAPIProvider(EmailVerif):
             session = requests.Session()
         return session
 
+    def set_credentials(self, **kwargs):
+        for key, value in six.iteritems(kwargs):
+            setattr(self, key, value)
+
     def _verify_email_one(self, email):
         params = self._get_params(email)
-        logger.info("Request to %s with %s" % (self.url, params))
+        logger.debug("GET request to %s with %s" % (self.url, params))
         response = self.session.get(self.url, params=params)
         status_code = response.status_code
         status_code_expected = requests.codes.ok
         if status_code == status_code_expected:
             response = response.json()
+            logger.debug("  response: %s" % response)
             response = self._parse_json_response(response)
             return response
         else:
@@ -181,3 +190,53 @@ class EmailVerifProviderEmailHippoDotCom(EmailVerifAPIProvider):
             'e': emails,
         }
 
+class EmailVerifProviderEmailValidatorDotNet(EmailVerifAPIProvider):
+    def __init__(self, session=None):
+        super(EmailVerifProviderEmailValidatorDotNet, self).__init__()
+        self.session = self._init_session(session)
+        self.api_key = None
+
+    @property
+    def url(self):
+        return 'http://api.email-validator.net/api/verify'
+
+    def _get_params(self, emails, timeout=10):
+        """
+        Returns dict of parameters to send to API
+        
+        Parameters:
+        ==========
+        emails: email to check (string)
+
+        """
+        return {
+            'APIKey': self.api_key,
+            'EmailAddress': emails,
+            'Timeout': timeout,
+        }
+
+    def _get_data_bulk(self, emails, 
+            task_name='', validation_mode='', notify_email='', notify_url=''):
+        return {
+            'EmailAddress': '\n'.join(emails),
+            'APIKey': self.api_key,
+            'TaskName': task_name,
+            'ValidationMode': validation_mode,
+            'NotifyEmail': notify_email,
+            'NotifyURL': notify_url
+        }
+
+    def _verify_email_multi_bulk(self, emails):
+        url = 'http://bulk.email-validator.net/api/verify'
+        data = self._get_data_bulk(emails)
+        logger.debug("POST request to %s with data=%s" % (url, data))
+        response = self.session.post(self.url, data=data)
+        status_code = response.status_code
+        status_code_expected = requests.codes.ok
+        if status_code == status_code_expected:
+            response = response.json()
+            logger.debug("  response: %s" % response)
+            response = self._parse_json_response(response)
+            return response
+        else:
+            raise("Status code is %d instead of %d" % (status_code, status_code_expected))
