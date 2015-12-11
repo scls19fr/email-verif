@@ -226,6 +226,13 @@ class EmailVerifProviderEmailValidatorDotNet(EmailVerifAPIProvider):
             'NotifyURL': notify_url
         }
 
+    def _parse_json_response(self, response):
+        if response['status'] == 200:
+            response['valid'] = True
+        else:
+            response['valid'] = False
+        return response
+
     def _verify_email_multi_bulk(self, emails):
         url = 'http://bulk.email-validator.net/api/verify'
         data = self._get_data_bulk(emails)

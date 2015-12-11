@@ -31,9 +31,9 @@ def main():
         expire_after=datetime.timedelta(days=365))
 
     print("Instantiate an email verificator")
-    provider, bulk = 'verify-email.org', False
+    #provider, bulk = 'verify-email.org', False
     #provider, bulk = 'emailhippo.com', False
-    #provider, bulk = 'email-validator.net', False
+    provider, bulk = 'email-validator.net', False
     verificator = EmailVerif.select(provider=provider)(session=session)
 
     print("Set credentials")
@@ -49,8 +49,8 @@ def main():
     #print(results)
 
     print("Verify several emails")
-    lst_emails = ['foo.bar.1@python.org',
-                'foo.bar.2@python.org',  'foo.bar.3@python.org', 'email@example.com']
+    lst_emails = ['foo.bar.1@python.org', 'example@domain.com',
+                'foo.bar.2@python.org', 'foo.bar.3@python.org', 'email@example.com']
     results = verificator.verify(lst_emails, bulk=bulk)
     pp.pprint(results)
 
