@@ -10,7 +10,7 @@ Install
 
 .. code:: bash
 
-    $ pip install email-verif
+    $ pip install git+https://github.com/scls19fr/email-verif
 
 Usage
 -----

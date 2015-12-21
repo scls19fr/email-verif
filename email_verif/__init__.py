@@ -129,7 +129,7 @@ class EmailVerifProviderVerifyEmailDotOrg(EmailVerifAPIProvider):
             'check': check
         }
 
-    def set_credentials(self, username=None, password=None):
+    def set_credentials(self, username=None, password=None, **kwargs):
         """
         Set credentials
 
