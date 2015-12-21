@@ -9,6 +9,7 @@ from __future__ import absolute_import, division, print_function
 
 import click
 
+import os
 from email_verif import EmailVerif
 
 import datetime
@@ -26,22 +27,32 @@ except ImportError:
 @click.command()
 @click.option('--provider', default='verify-email.org', help='Email verificator provider')
 @click.option('--emails', default='', help='Emails')
-@click.option('--xls', default='', help='Excel file with emails')
+@click.option('--filename', default='', help='Excel file with emails')
 @click.option('--column', default='Email', help='Email column')
 @click.option('--username', default='', help='Username')
 @click.option('--password', default='', help='Password')
 @click.option('--api_key', default='', help='API key')
 @click.option('--api_url', default='', help='API URL')
-def main(provider, emails, xls, column, username, password, api_key, api_url):
+def main(provider, emails, filename, column, username, password, api_key, api_url):
     logging.basicConfig(level=logging.DEBUG)
 
     pp = pprint.PrettyPrinter(indent=4)
     if emails != '':
         emails = emails.split(',')
     else:
-        if xls != '':
-            df = pd.read_excel(xls)
-            emails = df[column].values
+        if filename != '':
+            short_file_name, file_extension = os.path.splitext(filename)
+            if _HAS_PANDAS:
+                if file_extension in ['.xls', '.xlsx']:
+                    df = pd.read_excel(filename)
+                    emails = df[column].values
+                elif file_extension in ['.csv']:
+                    df = pd.read_csv(filename)
+                    emails = df[column].values
+                else:
+                    raise NotImplementedError("Filename extension must be '.xls', '.xlsx' or '.csv'")
+            else:
+                raise NotImplementedError("Pandas is necessary to feed emails using Excel or CSV file")
         else:
             raise NotImplementedError("No emails where given")
 

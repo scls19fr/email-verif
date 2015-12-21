@@ -21,10 +21,12 @@ A Command Line Interface is also given
 
 .. code:: bash
 
-    $ email_verif --xls email_to_check.xls --provider YOURPROVIDER --username YOURUSERNAME --password YOURUSERNAME
+    $ email_verif --filename email_to_check.xls --provider YOURPROVIDER --username YOURUSERNAME --password YOURUSERNAME
 
 :code:`YOURPROVIDER` can be :code:`verify-email.org`, :code:`emailhippo.com`, :code:`email-validator.net`
 but if you are a developer it shouldn't be hard to add some others.
+
+You can provide an Excel or CSV file using `--filename`.
 
 Development
 -----------
