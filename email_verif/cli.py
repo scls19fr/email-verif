@@ -33,7 +33,8 @@ except ImportError:
 @click.option('--password', default='', help='Password')
 @click.option('--api_key', default='', help='API key')
 @click.option('--api_url', default='', help='API URL')
-def main(provider, emails, filename, column, username, password, api_key, api_url):
+@click.option('--bulk', default=False, help='API URL')
+def main(provider, emails, filename, column, username, password, api_key, api_url, bulk):
     logging.basicConfig(level=logging.DEBUG)
 
     pp = pprint.PrettyPrinter(indent=4)
@@ -62,16 +63,18 @@ def main(provider, emails, filename, column, username, password, api_key, api_ur
         expire_after=datetime.timedelta(days=365))
 
     print("Instantiate an email verificator")
-    provider, bulk = 'verify-email.org', False
     verificator = Verifier(provider=provider)(session=session)
 
     print("Set credentials")
-    credentials = {
-        'username': username,
-        'password': password,
-        'api_key': api_key,
-        'api_url': api_url
-    }
+    credentials = {}
+    if username != '':
+        credentials['username'] = username
+    if password != '':
+        credentials['password'] = password
+    if api_key != '':
+        credentials['api_key'] = api_key
+    if api_url != '':
+        credentials['api_url'] = api_url
     verificator.set_credentials(**credentials)
     results = verificator.verify(emails, bulk=bulk)
     pp.pprint(results)
