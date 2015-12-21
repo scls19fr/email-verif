@@ -26,15 +26,24 @@ except ImportError:
 @click.command()
 @click.option('--provider', default='verify-email.org', help='Email verificator provider')
 @click.option('--emails', default='', help='Emails')
+@click.option('--xls', default='', help='Excel file with emails')
+@click.option('--column', default='Email', help='Email column')
 @click.option('--username', default='', help='Username')
 @click.option('--password', default='', help='Password')
 @click.option('--api_key', default='', help='API key')
 @click.option('--api_url', default='', help='API URL')
-def main(provider, emails, username, password, api_key, api_url):
+def main(provider, emails, xls, column, username, password, api_key, api_url):
     logging.basicConfig(level=logging.DEBUG)
 
     pp = pprint.PrettyPrinter(indent=4)
-    emails = emails.split(',')
+    if emails != '':
+        emails = emails.split(',')
+    else:
+        if xls != '':
+            df = pd.read_excel(xls)
+            emails = df[column].values
+        else:
+            raise NotImplementedError("No emails where given")
 
     print("Create a CachedSession")
     session = requests_cache.CachedSession(
