@@ -17,6 +17,14 @@ Usage
 
 see `samples <samples>`_ directory
 
+A Command Line Interface is also given
+
+.. code:: bash
+
+    $ email_verif --xls email_to_check.xls --provider YOURPROVIDER --username YOURUSERNAME --password YOURUSERNAME
+
+`YOURPROVIDER` can be `verify-email.org`, `emailhippo.com`, `email-validator.net`
+but if you are a developer it shouldn't be hard to add some others.
 
 Development
 -----------
