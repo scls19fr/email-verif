@@ -10,7 +10,7 @@ from __future__ import absolute_import, division, print_function
 import click
 
 import os
-from email_verif import EmailVerif
+from email_verif import Verifier
 
 import datetime
 import requests_cache
@@ -63,7 +63,7 @@ def main(provider, emails, filename, column, username, password, api_key, api_ur
 
     print("Instantiate an email verificator")
     provider, bulk = 'verify-email.org', False
-    verificator = EmailVerif.select(provider=provider)(session=session)
+    verificator = Verifier(provider=provider)(session=session)
 
     print("Set credentials")
     credentials = {

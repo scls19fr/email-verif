@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from email_verif import EmailVerif
+from email_verif import Verifier
 from config import credentials
 
 import datetime
@@ -31,10 +31,10 @@ def main():
         expire_after=datetime.timedelta(days=365))
 
     print("Instantiate an email verificator")
-    #provider, bulk = 'verify-email.org', False
+    provider, bulk = 'verify-email.org', False
     #provider, bulk = 'emailhippo.com', False
-    provider, bulk = 'email-validator.net', False
-    verificator = EmailVerif.select(provider=provider)(session=session)
+    #provider, bulk = 'email-validator.net', False
+    verificator = Verifier(provider=provider)(session=session)
 
     print("Set credentials")
     #verificator.set_credentials(
