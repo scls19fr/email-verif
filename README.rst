@@ -26,7 +26,7 @@ A Command Line Interface is also given
 :code:`YOURPROVIDER` can be :code:`verify-email.org`, :code:`emailhippo.com`, :code:`email-validator.net`
 but if you are a developer it shouldn't be hard to add some others.
 
-You can provide an Excel or CSV file using `--filename`.
+You can provide an Excel or CSV file using :code:`--filename`.
 
 Development
 -----------
